@@ -1,3 +1,3 @@
 #!/bin/sh
 
-gofmt -l -w
+gofmt -l -w .
