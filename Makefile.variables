@@ -1,0 +1,17 @@
+export PROJECT = employeemanagementsystem
+IMPORT_PATH :=  github.com/ahsanfayaz52/employeemanagementsystem/tree/feature/db
+
+# all non-windows environments
+ROOT := $(shell pwd)
+
+DEV_IMAGE := ${PROJECT}_dev
+
+DOCKRUN := docker run --rm \
+	-v ${ROOT}:/${IMPORT_PATH} \
+	${DEV_IMAGE}
+
+DOCKTEST := docker run --rm \
+    -v ${ROOT}:/${IMPORT_PATH} \
+    --link employee-system-mongo-db:employee-system-mongo-db \
+    --link employee-system-mysql-db:employee-system-mysql-db \
+    ${DEV_IMAGE}
