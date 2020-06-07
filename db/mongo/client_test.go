@@ -8,7 +8,6 @@ import (
 
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/db"
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/models"
-
 )
 
 func Test_client_DeleteEmployee(t *testing.T) {
@@ -36,7 +35,7 @@ func Test_client_DeleteEmployee(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c, _ := NewClient(db.Option{})
-			if err := c.DeleteEmployee(tt.args.id); (err != nil) != tt.wantErr {
+			if _, err := c.DeleteEmployee(tt.args.id); (err != nil) != tt.wantErr {
 				t.Errorf("DeleteEmployee() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
