@@ -36,7 +36,6 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to connect to db")
 	}
-
 	return &client{conn: cli}, nil
 }
 
@@ -47,9 +46,9 @@ func (c client) SaveEmployee(employee *models.Employee) (string, error) {
 	opts := options.Update().SetUpsert(true)
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
 	if _, err := collection.UpdateOne(context.TODO(), bson.M{"id": employee.ID}, bson.M{"$set": employee}, opts); err != nil {
-		panic("oops cannot update employee")
+		return "", errors.Wrap(err, "failed to add/update employee")
 	}
-	return "", nil
+	return employee.ID, nil
 }
 
 func (c client) GetEmployeeByID(id string) (*models.Employee, error) {
@@ -57,9 +56,8 @@ func (c client) GetEmployeeByID(id string) (*models.Employee, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
 	if err := collection.FindOne(context.TODO(), bson.M{"id": id}).Decode(&employee); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			panic("oops error occurred ")
+			return nil, errors.Wrap(err, "failed to get employee")
 		}
-		return nil, err
 	}
 	return employee, nil
 }
@@ -68,26 +66,26 @@ func (c client) DeleteEmployee(id string) error {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
 	if _, err := collection.DeleteOne(context.TODO(), bson.M{"id": id}); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
-			panic("oops error occurred ")
+			return errors.Wrap(err, "failed to get employee")
 		}
 	}
 	return nil
 }
 
-func (c client) ListEmployee() (*[]models.Employee, error) {
-	var employee []models.Employee
-	var em models.Employee
+func (c client) ListEmployees() ([]*models.Employee, error) {
+	var employee []*models.Employee
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
-	cursor, err := collection.Find(context.TODO(), bson.M{})
+	cursor, err := collection.Find(context.TODO(), bson.D{{}})
 	if err != nil {
-		log().Info("oops no records fetched")
+		return nil, errors.Wrap(err, "failed to retrieve employees")
 	}
 	defer cursor.Close(context.TODO())
 	for cursor.Next(context.TODO()) {
+		var em *models.Employee
 		if err = cursor.Decode(&em); err != nil {
-			log().Info("cannot add elements to list")
+			return nil, errors.Wrap(err, "Error occurred while scanning rows")
 		}
 		employee = append(employee, em)
 	}
-	return &employee, nil
+	return employee, nil
 }

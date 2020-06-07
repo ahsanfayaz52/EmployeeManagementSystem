@@ -8,7 +8,6 @@ import (
 
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/db"
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/models"
-
 )
 
 func Test_client_DeleteEmployee(t *testing.T) {
@@ -82,7 +81,7 @@ func Test_client_GetEmployeeByID(t *testing.T) {
 	}
 }
 
-func Test_client_ListEmployee(t *testing.T) {
+func Test_client_ListEmployees(t *testing.T) {
 	c, _ := NewClient(db.Option{})
 	employee := &models.Employee{Name: "usman", Address: "attock", Age: 25, Salary: 40000, Phone: 123}
 	_, _ = c.SaveEmployee(employee)
@@ -104,7 +103,7 @@ func Test_client_ListEmployee(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c, _ := NewClient(db.Option{})
-			got, err := c.ListEmployee()
+			got, err := c.ListEmployees()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ListEmployee() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -117,6 +116,8 @@ func Test_client_ListEmployee(t *testing.T) {
 }
 
 func Test_client_SaveEmployee(t *testing.T) {
+	c, _ := NewClient(db.Option{})
+	employee := &models.Employee{Name: "beenish", Address: "lahore", Age: 35, Salary: 50000, Phone: 456}
 	type fields struct {
 		conn *mongo.Client
 	}
@@ -127,30 +128,25 @@ func Test_client_SaveEmployee(t *testing.T) {
 		name    string
 		fields  fields
 		args    args
-		want    string
 		wantErr bool
 	}{
 		{
 			name:    "success - ADD employee in db",
-			args:    args{employee: &models.Employee{Name: "beenish", Address: "lahore", Age: 23, Salary: 20000, Phone: 123}},
+			args:    args{employee: employee},
 			wantErr: false,
 		},
 		{
 			name:    "success - UPDATE employee in db",
-			args:    args{employee: &models.Employee{ID: "c57303a0-d237-420a-b148-b7cc337126f2", Name: "osama khan", Address: "sakkar", Age: 23, Salary: 20000, Phone: 123}},
+			args:    args{employee: &models.Employee{ID: employee.ID, Name: "osama khan", Address: "sakkar", Age: 23, Salary: 20000, Phone: 123}},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			c, _ := NewClient(db.Option{})
-			got, err := c.SaveEmployee(tt.args.employee)
+			_, err := c.SaveEmployee(tt.args.employee)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SaveEmployee() error = %v, wantErr %v", err, tt.wantErr)
 				return
-			}
-			if got != tt.want {
-				t.Errorf("SaveEmployee() got = %v, want %v", got, tt.want)
 			}
 		})
 	}

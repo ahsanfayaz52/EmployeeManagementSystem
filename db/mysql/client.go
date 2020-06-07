@@ -49,7 +49,6 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to connect to db")
 	}
-
 	return &client{db: cli}, nil
 }
 
@@ -62,18 +61,17 @@ func (c client) SaveEmployee(employee *models.Employee) (string, error) {
 	if _, err := c.db.NamedExec(fmt.Sprintf(`INSERT IGNORE INTO %s (%s) VALUES(%s)`, EmployeeTableName, strings.Join(names, ","), strings.Join(mkPlaceHolder(names, ":", func(name, prefix string) string {
 		return prefix + name
 	}), ",")), employee); err != nil {
-		return "", errors.Wrap(err, "failed to add employee")
+		return "", errors.Wrap(err, "failed to add/update employee")
 	}
-	return "", nil
+	return employee.ID, nil
 }
 
 func (c client) GetEmployeeByID(id string) (*models.Employee, error) {
 	var em models.Employee
 	if err := c.db.Get(&em, fmt.Sprintf(`SELECT * FROM %s WHERE id = '%s'`, EmployeeTableName, id)); err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			log().Info("no record")
+			return nil, errors.Wrap(err, "failed to get employee")
 		}
-		return nil, err
 	}
 	return &em, nil
 }
@@ -88,23 +86,23 @@ func (c client) DeleteEmployee(id string) error {
 	return nil
 }
 
-func (c client) ListEmployee() (*[]models.Employee, error) {
-	var emList []models.Employee
+func (c client) ListEmployees() ([]*models.Employee, error) {
+	var emList []*models.Employee
 	var em models.Employee
 	rows, err := c.db.Query(fmt.Sprintf(`SELECT * FROM %s`, EmployeeTableName))
 	if err != nil {
 		if errors.Is(err, rows.Err()) {
-			log().Info(err)
+			return nil, errors.Wrap(err, "failed to retrieve employees")
 		}
 	}
 	for rows.Next() {
 		err = rows.Scan(&em.ID, &em.Name, &em.Address, &em.Age, &em.Salary, &em.Phone)
 		if err != nil {
-			panic("oops error occurred")
+			return nil, errors.Wrap(err, "Error occurred while scanning rows")
 		}
-		emList = append(emList, em)
+		emList = append(emList, &em)
 	}
-	return &emList, nil
+	return emList, nil
 }
 
 func mkPlaceHolder(names []string, prefix string, formatName func(name, prefix string) string) []string {
@@ -112,6 +110,5 @@ func mkPlaceHolder(names []string, prefix string, formatName func(name, prefix s
 	for i, name := range names {
 		ph[i] = formatName(name, prefix)
 	}
-
 	return ph
 }

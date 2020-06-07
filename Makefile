@@ -27,7 +27,7 @@ test:  check db_prepare
 
 db_start: db_stop
 	@docker run --name employee-system-mysql-db -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -p 3306:3306 -d mysql:5.6
-	@docker run --name employee-employee-mongo-db -p 27015-27017:27015-27017 -d mongo:4.2.0
+	@docker run --name employee-system-mongo-db -p 27015-27017:27015-27017 -d mongo:4.2.0
 
 db_prepare: db_start
 	@docker cp employee_system.sql employee-system-mysql-db:employee_system.sql
@@ -37,3 +37,6 @@ db_prepare: db_start
 	
 db_stop:
 	bash ./scripts/db_stop.sh
+
+codegen: prepare
+	${DOCKRUN} bash ./scripts/swagger.sh
