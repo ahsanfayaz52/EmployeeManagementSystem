@@ -1,5 +1,5 @@
 export PROJECT = employeemanagementsystem
-IMPORT_PATH :=  github.com/ahsanfayaz52/employeemanagementsystem/tree/feature/db
+IMPORT_PATH :=  github.com/ahsanfayaz52/employeemanagementsystem
 
 # all non-windows environments
 ROOT := $(shell pwd)
