@@ -10,8 +10,13 @@ import (
 type DataStore interface {
 	SaveEmployee(employee *models.Employee) (string, error)
 	GetEmployeeByID(id string) (*models.Employee, error)
+<<<<<<< HEAD
 	DeleteEmployee(id string) (string, error)
 	ListEmployee() ([]*models.Employee, error)
+=======
+	DeleteEmployee(id string) error
+	ListEmployees() ([]*models.Employee, error)
+>>>>>>> feature/service
 }
 
 // Option holds configuration for data store clients.

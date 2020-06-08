@@ -31,7 +31,11 @@ paths:
         500:
           description: "internal server error"
     get:
+<<<<<<< HEAD
       operationId: "ListEmployee"
+=======
+      operationId: "ListEmployees"
+>>>>>>> feature/service
       description: "get all the employees"
       responses:
         200:

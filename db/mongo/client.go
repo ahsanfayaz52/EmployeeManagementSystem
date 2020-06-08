@@ -66,13 +66,21 @@ func (c client) DeleteEmployee(id string) (string, error) {
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
 	if _, err := collection.DeleteOne(context.TODO(), bson.M{"id": id}); err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
+<<<<<<< HEAD
 			return "", errors.Wrap(err, "failed to get employee")
+=======
+			return errors.Wrap(err, "failed to get employee")
+>>>>>>> feature/service
 		}
 	}
 	return "employee is removed successfully", nil
 }
 
+<<<<<<< HEAD
 func (c client) ListEmployee() ([]*models.Employee, error) {
+=======
+func (c client) ListEmployees() ([]*models.Employee, error) {
+>>>>>>> feature/service
 	var employee []*models.Employee
 	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
 	cursor, err := collection.Find(context.TODO(), bson.D{{}})
@@ -83,7 +91,11 @@ func (c client) ListEmployee() ([]*models.Employee, error) {
 	for cursor.Next(context.TODO()) {
 		var em *models.Employee
 		if err = cursor.Decode(&em); err != nil {
+<<<<<<< HEAD
 			return nil, errors.Wrap(err, "oops error occurred while scanning.....")
+=======
+			return nil, errors.Wrap(err, "Error occurred while scanning rows")
+>>>>>>> feature/service
 		}
 		employee = append(employee, em)
 	}

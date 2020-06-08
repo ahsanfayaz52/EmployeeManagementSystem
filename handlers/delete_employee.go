@@ -19,7 +19,11 @@ type deleteEmployee struct {
 
 // Handle the delete entry request.
 func (e *deleteEmployee) Handle(params operations.DeleteEmployeeParams) middleware.Responder {
+<<<<<<< HEAD
 	if _, err := e.rt.Service().DeleteEmployee(params.ID); err != nil {
+=======
+	if err := e.rt.Service().DeleteEmployee(params.ID); err != nil {
+>>>>>>> feature/service
 		switch apiErr := err.(*domainErr.APIError); {
 		case apiErr.IsError(domainErr.NotFound):
 			return operations.NewDeleteEmployeeNotFound()

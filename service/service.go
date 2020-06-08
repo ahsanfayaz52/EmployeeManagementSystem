@@ -23,6 +23,7 @@ func (s *Service) GetEmployeeByID(id string) (*models.Employee, error) {
 }
 
 // DeleteEmployee deletes employee from database.
+<<<<<<< HEAD
 func (s *Service) DeleteEmployee(id string) (string, error) {
 	result, err := s.db.DeleteEmployee(id)
 	if err != nil {
@@ -34,6 +35,19 @@ func (s *Service) DeleteEmployee(id string) (string, error) {
 // ListEmployee retrieve all the employees from database.
 func (s *Service) ListEmployee() ([]*models.Employee, error) {
 	employees, err := s.db.ListEmployee()
+=======
+func (s *Service) DeleteEmployee(id string) error {
+	err := s.db.DeleteEmployee(id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// ListEmployees retrieve all the employees from database.
+func (s *Service) ListEmployees() ([]*models.Employee, error) {
+	employees, err := s.db.ListEmployees()
+>>>>>>> feature/service
 	if err != nil {
 		return nil, err
 	}

@@ -18,7 +18,11 @@ func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	handler.SaveEmployeeHandler = NewSaveEmployee(rt)
 	handler.GetEmployeeByIDHandler = NewGetEmployeeByID(rt)
 	handler.DeleteEmployeeHandler = NewDeleteEmployee(rt)
+<<<<<<< HEAD
 	handler.ListEmployeeHandler = NewListEmployee(rt)
+=======
+	handler.ListEmployeesHandler = NewListEmployees(rt)
+>>>>>>> feature/service
 
 	return handler
 }

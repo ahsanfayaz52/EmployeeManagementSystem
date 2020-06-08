@@ -86,7 +86,11 @@ func (c client) DeleteEmployee(id string) (string, error) {
 	return "employee is removed successfully", nil
 }
 
+<<<<<<< HEAD
 func (c client) ListEmployee() ([]*models.Employee, error) {
+=======
+func (c client) ListEmployees() ([]*models.Employee, error) {
+>>>>>>> feature/service
 	var emList []*models.Employee
 	var em models.Employee
 	rows, err := c.db.Query(fmt.Sprintf(`SELECT * FROM %s`, EmployeeTableName))
@@ -98,7 +102,11 @@ func (c client) ListEmployee() ([]*models.Employee, error) {
 	for rows.Next() {
 		err = rows.Scan(&em.ID, &em.Name, &em.Address, &em.Age, &em.Salary, &em.Phone)
 		if err != nil {
+<<<<<<< HEAD
 			return nil, errors.Wrap(err, "oops error occurred while scanning.....")
+=======
+			return nil, errors.Wrap(err, "Error occurred while scanning rows")
+>>>>>>> feature/service
 		}
 		emList = append(emList, &em)
 	}
