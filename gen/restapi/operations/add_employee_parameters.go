@@ -6,7 +6,6 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/go-openapi/errors"
@@ -16,24 +15,23 @@ import (
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/gen/models"
 )
 
-// NewSaveEmployeeParams creates a new SaveEmployeeParams object
+// NewAddEmployeeParams creates a new AddEmployeeParams object
 // no default values defined in spec.
-func NewSaveEmployeeParams() SaveEmployeeParams {
+func NewAddEmployeeParams() AddEmployeeParams {
 
-	return SaveEmployeeParams{}
+	return AddEmployeeParams{}
 }
 
-// SaveEmployeeParams contains all the bound params for the save employee operation
+// AddEmployeeParams contains all the bound params for the add employee operation
 // typically these are obtained from a http.Request
 //
-// swagger:parameters saveEmployee
-type SaveEmployeeParams struct {
+// swagger:parameters addEmployee
+type AddEmployeeParams struct {
 
 	// HTTP Request Object
 	HTTPRequest *http.Request `json:"-"`
 
-	/*contains employee information
-	  Required: true
+	/*employee's details
 	  In: body
 	*/
 	Employee *models.Employee
@@ -42,8 +40,8 @@ type SaveEmployeeParams struct {
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
 // for simple values it will use straight method calls.
 //
-// To ensure default values, the struct must have been initialized with NewSaveEmployeeParams() beforehand.
-func (o *SaveEmployeeParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
+// To ensure default values, the struct must have been initialized with NewAddEmployeeParams() beforehand.
+func (o *AddEmployeeParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
 
 	o.HTTPRequest = r
@@ -52,11 +50,7 @@ func (o *SaveEmployeeParams) BindRequest(r *http.Request, route *middleware.Matc
 		defer r.Body.Close()
 		var body models.Employee
 		if err := route.Consumer.Consume(r.Body, &body); err != nil {
-			if err == io.EOF {
-				res = append(res, errors.Required("employee", "body"))
-			} else {
-				res = append(res, errors.NewParseError("employee", "body", "", err))
-			}
+			res = append(res, errors.NewParseError("employee", "body", "", err))
 		} else {
 			// validate body object
 			if err := body.Validate(route.Formats); err != nil {
@@ -67,8 +61,6 @@ func (o *SaveEmployeeParams) BindRequest(r *http.Request, route *middleware.Matc
 				o.Employee = &body
 			}
 		}
-	} else {
-		res = append(res, errors.Required("employee", "body"))
 	}
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

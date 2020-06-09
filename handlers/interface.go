@@ -15,10 +15,11 @@ func NewHandler(rt *runtime.Runtime, spec *loads.Document) Handler {
 	handler := operations.NewEmployeeManagementSystemAPI(spec)
 
 	// employee handlers.
-	handler.SaveEmployeeHandler = NewSaveEmployee(rt)
+	handler.AddEmployeeHandler = NewAddEmployee(rt)
 	handler.GetEmployeeByIDHandler = NewGetEmployeeByID(rt)
 	handler.DeleteEmployeeHandler = NewDeleteEmployee(rt)
 	handler.ListEmployeesHandler = NewListEmployees(rt)
+	handler.UpdateEmployeeHandler = NewUpdateEmployee(rt)
 
 	return handler
 }

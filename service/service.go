@@ -4,38 +4,27 @@ import (
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/models"
 )
 
-// SaveEmployee adds or update employee into database.
-func (s *Service) SaveEmployee(employee *models.Employee) (string, error) {
-	result, err := s.db.SaveEmployee(employee)
-	if err != nil {
-		return "", err
-	}
-	return result, nil
+// AddEmployee adds or update employee into database.
+func (s *Service) AddEmployee(employee *models.Employee) (string, error) {
+	return s.db.AddEmployee(employee)
+}
+
+// UpdateEmployee updates employee record in database.
+func (s *Service) UpdateEmployee(employee *models.Employee) error {
+	return s.db.UpdateEmployee(employee)
 }
 
 // GetEmployeeByID retrieves employee from database with id.
 func (s *Service) GetEmployeeByID(id string) (*models.Employee, error) {
-	employee, err := s.db.GetEmployeeByID(id)
-	if err != nil {
-		return nil, err
-	}
-	return employee, nil
+	return s.db.GetEmployeeByID(id)
 }
 
 // DeleteEmployee deletes employee from database.
 func (s *Service) DeleteEmployee(id string) error {
-	err := s.db.DeleteEmployee(id)
-	if err != nil {
-		return err
-	}
-	return nil
+	return s.db.DeleteEmployee(id)
 }
 
 // ListEmployees retrieve all the employees from database.
 func (s *Service) ListEmployees() ([]*models.Employee, error) {
-	employees, err := s.db.ListEmployees()
-	if err != nil {
-		return nil, err
-	}
-	return employees, nil
+	return s.db.ListEmployees()
 }

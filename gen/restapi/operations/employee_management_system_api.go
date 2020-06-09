@@ -50,8 +50,11 @@ func NewEmployeeManagementSystemAPI(spec *loads.Document) *EmployeeManagementSys
 		ListEmployeesHandler: ListEmployeesHandlerFunc(func(params ListEmployeesParams) middleware.Responder {
 			return middleware.NotImplemented("operation ListEmployees has not yet been implemented")
 		}),
-		SaveEmployeeHandler: SaveEmployeeHandlerFunc(func(params SaveEmployeeParams) middleware.Responder {
-			return middleware.NotImplemented("operation SaveEmployee has not yet been implemented")
+		AddEmployeeHandler: AddEmployeeHandlerFunc(func(params AddEmployeeParams) middleware.Responder {
+			return middleware.NotImplemented("operation AddEmployee has not yet been implemented")
+		}),
+		UpdateEmployeeHandler: UpdateEmployeeHandlerFunc(func(params UpdateEmployeeParams) middleware.Responder {
+			return middleware.NotImplemented("operation UpdateEmployee has not yet been implemented")
 		}),
 	}
 }
@@ -92,8 +95,10 @@ type EmployeeManagementSystemAPI struct {
 	GetEmployeeByIDHandler GetEmployeeByIDHandler
 	// ListEmployeesHandler sets the operation handler for the list employees operation
 	ListEmployeesHandler ListEmployeesHandler
-	// SaveEmployeeHandler sets the operation handler for the save employee operation
-	SaveEmployeeHandler SaveEmployeeHandler
+	// AddEmployeeHandler sets the operation handler for the add employee operation
+	AddEmployeeHandler AddEmployeeHandler
+	// UpdateEmployeeHandler sets the operation handler for the update employee operation
+	UpdateEmployeeHandler UpdateEmployeeHandler
 	// ServeError is called when an error is received, there is a default handler
 	// but you can set your own with this
 	ServeError func(http.ResponseWriter, *http.Request, error)
@@ -169,8 +174,11 @@ func (o *EmployeeManagementSystemAPI) Validate() error {
 	if o.ListEmployeesHandler == nil {
 		unregistered = append(unregistered, "ListEmployeesHandler")
 	}
-	if o.SaveEmployeeHandler == nil {
-		unregistered = append(unregistered, "SaveEmployeeHandler")
+	if o.AddEmployeeHandler == nil {
+		unregistered = append(unregistered, "AddEmployeeHandler")
+	}
+	if o.UpdateEmployeeHandler == nil {
+		unregistered = append(unregistered, "UpdateEmployeeHandler")
 	}
 
 	if len(unregistered) > 0 {
@@ -275,7 +283,11 @@ func (o *EmployeeManagementSystemAPI) initHandlerCache() {
 	if o.handlers["POST"] == nil {
 		o.handlers["POST"] = make(map[string]http.Handler)
 	}
-	o.handlers["POST"][""] = NewSaveEmployee(o.context, o.SaveEmployeeHandler)
+	o.handlers["POST"][""] = NewAddEmployee(o.context, o.AddEmployeeHandler)
+	if o.handlers["PUT"] == nil {
+		o.handlers["PUT"] = make(map[string]http.Handler)
+	}
+	o.handlers["PUT"]["/{ID}"] = NewUpdateEmployee(o.context, o.UpdateEmployeeHandler)
 }
 
 // Serve creates a http handler to serve the API over HTTP

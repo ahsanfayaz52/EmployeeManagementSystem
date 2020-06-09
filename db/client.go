@@ -8,7 +8,8 @@ import (
 
 // DataStore is an interface for query ops.
 type DataStore interface {
-	SaveEmployee(employee *models.Employee) (string, error)
+	AddEmployee(employee *models.Employee) (string, error)
+	UpdateEmployee(employee *models.Employee) error
 	GetEmployeeByID(id string) (*models.Employee, error)
 	DeleteEmployee(id string) error
 	ListEmployees() ([]*models.Employee, error)

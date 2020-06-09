@@ -48,9 +48,14 @@ func configureAPI(api *operations.EmployeeManagementSystemAPI) http.Handler {
 			return middleware.NotImplemented("operation operations.ListEmployees has not yet been implemented")
 		})
 	}
-	if api.SaveEmployeeHandler == nil {
-		api.SaveEmployeeHandler = operations.SaveEmployeeHandlerFunc(func(params operations.SaveEmployeeParams) middleware.Responder {
-			return middleware.NotImplemented("operation operations.SaveEmployee has not yet been implemented")
+	if api.AddEmployeeHandler == nil {
+		api.AddEmployeeHandler = operations.AddEmployeeHandlerFunc(func(params operations.AddEmployeeParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.AddEmployee has not yet been implemented")
+		})
+	}
+	if api.UpdateEmployeeHandler == nil {
+		api.UpdateEmployeeHandler = operations.UpdateEmployeeHandlerFunc(func(params operations.UpdateEmployeeParams) middleware.Responder {
+			return middleware.NotImplemented("operation operations.UpdateEmployee has not yet been implemented")
 		})
 	}
 

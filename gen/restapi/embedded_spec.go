@@ -56,13 +56,12 @@ func init() {
         }
       },
       "post": {
-        "operationId": "saveEmployee",
+        "operationId": "addEmployee",
         "parameters": [
           {
-            "description": "contains employee information",
+            "description": "employee's details",
             "name": "employee",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/employee"
             }
@@ -74,6 +73,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/employee"
             }
+          },
+          "409": {
+            "description": "employee already exists"
           },
           "500": {
             "description": "internal server error"
@@ -103,6 +105,37 @@ func init() {
           },
           "404": {
             "description": "employee not found"
+          },
+          "500": {
+            "description": "internal server error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateEmployee",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "UUID of the employee",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "employee's details",
+            "name": "employee",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/employee"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "employee updated",
+            "schema": {
+              "$ref": "#/definitions/employee"
+            }
           },
           "500": {
             "description": "internal server error"
@@ -200,13 +233,12 @@ func init() {
         }
       },
       "post": {
-        "operationId": "saveEmployee",
+        "operationId": "addEmployee",
         "parameters": [
           {
-            "description": "contains employee information",
+            "description": "employee's details",
             "name": "employee",
             "in": "body",
-            "required": true,
             "schema": {
               "$ref": "#/definitions/employee"
             }
@@ -218,6 +250,9 @@ func init() {
             "schema": {
               "$ref": "#/definitions/employee"
             }
+          },
+          "409": {
+            "description": "employee already exists"
           },
           "500": {
             "description": "internal server error"
@@ -247,6 +282,37 @@ func init() {
           },
           "404": {
             "description": "employee not found"
+          },
+          "500": {
+            "description": "internal server error"
+          }
+        }
+      },
+      "put": {
+        "operationId": "updateEmployee",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "UUID of the employee",
+            "name": "ID",
+            "in": "path",
+            "required": true
+          },
+          {
+            "description": "employee's details",
+            "name": "employee",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/employee"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "employee updated",
+            "schema": {
+              "$ref": "#/definitions/employee"
+            }
           },
           "500": {
             "description": "internal server error"

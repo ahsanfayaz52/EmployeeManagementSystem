@@ -9,7 +9,7 @@ import (
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/gen/restapi/operations"
 )
 
-// NewListEmployee handles a request for retrieving employees.
+// NewListEmployees handles a request for retrieving employees.
 func NewListEmployees(rt *runtime.Runtime) operations.ListEmployeesHandler {
 	return &listEmployees{rt: rt}
 }
@@ -29,7 +29,7 @@ func (e *listEmployees) Handle(params operations.ListEmployeesParams) middleware
 			return operations.NewGetEmployeeByIDInternalServerError()
 		}
 	}
-	var emList []*models.Employee
+	emList := make([]*models.Employee, 0)
 	for i := range employee {
 		emList = append(emList, &models.Employee{
 			ID:      employee[i].ID,

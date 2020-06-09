@@ -33,7 +33,9 @@ type ClientService interface {
 
 	ListEmployees(params *ListEmployeesParams) (*ListEmployeesOK, error)
 
-	SaveEmployee(params *SaveEmployeeParams) (*SaveEmployeeCreated, error)
+	AddEmployee(params *AddEmployeeParams) (*AddEmployeeCreated, error)
+
+	UpdateEmployee(params *UpdateEmployeeParams) (*UpdateEmployeeOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -141,36 +143,70 @@ func (a *Client) ListEmployees(params *ListEmployeesParams) (*ListEmployeesOK, e
 }
 
 /*
-  SaveEmployee save employee API
+  AddEmployee add employee API
 */
-func (a *Client) SaveEmployee(params *SaveEmployeeParams) (*SaveEmployeeCreated, error) {
+func (a *Client) AddEmployee(params *AddEmployeeParams) (*AddEmployeeCreated, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
-		params = NewSaveEmployeeParams()
+		params = NewAddEmployeeParams()
 	}
 
 	result, err := a.transport.Submit(&runtime.ClientOperation{
-		ID:                 "saveEmployee",
+		ID:                 "addEmployee",
 		Method:             "POST",
 		PathPattern:        "/",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &SaveEmployeeReader{formats: a.formats},
+		Reader:             &AddEmployeeReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	})
 	if err != nil {
 		return nil, err
 	}
-	success, ok := result.(*SaveEmployeeCreated)
+	success, ok := result.(*AddEmployeeCreated)
 	if ok {
 		return success, nil
 	}
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for saveEmployee: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for addEmployee: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  UpdateEmployee update employee API
+*/
+func (a *Client) UpdateEmployee(params *UpdateEmployeeParams) (*UpdateEmployeeOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUpdateEmployeeParams()
+	}
+
+	result, err := a.transport.Submit(&runtime.ClientOperation{
+		ID:                 "updateEmployee",
+		Method:             "PUT",
+		PathPattern:        "/{ID}",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &UpdateEmployeeReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	})
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UpdateEmployeeOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for updateEmployee: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

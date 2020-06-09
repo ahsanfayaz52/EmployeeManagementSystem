@@ -8,17 +8,17 @@ import (
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/models"
 )
 
-// NewSaveEmployee handles request for saving employee.
-func NewSaveEmployee(rt *runtime.Runtime) operations.SaveEmployeeHandler {
-	return &saveEmployee{rt: rt}
+// NewAddEmployee handles request for saving employee.
+func NewAddEmployee(rt *runtime.Runtime) operations.AddEmployeeHandler {
+	return &addEmployee{rt: rt}
 }
 
-type saveEmployee struct {
+type addEmployee struct {
 	rt *runtime.Runtime
 }
 
 // Handle the save employee request.
-func (e *saveEmployee) Handle(params operations.SaveEmployeeParams) middleware.Responder {
+func (e *addEmployee) Handle(params operations.AddEmployeeParams) middleware.Responder {
 	employee := models.Employee{
 		ID:      params.Employee.ID,
 		Name:    params.Employee.Name,
@@ -28,12 +28,12 @@ func (e *saveEmployee) Handle(params operations.SaveEmployeeParams) middleware.R
 		Phone:   int(params.Employee.Phone),
 	}
 
-	id, err := e.rt.Service().SaveEmployee(&employee)
+	id, err := e.rt.Service().AddEmployee(&employee)
 	if err != nil {
-		log().Errorf("failed to save/update employee: %s", err)
-		return operations.NewSaveEmployeeInternalServerError()
+		log().Errorf("failed to add employee: %s", err)
+		return operations.NewAddEmployeeInternalServerError()
 	}
 
 	params.Employee.ID = id
-	return operations.NewSaveEmployeeCreated().WithPayload(params.Employee)
+	return operations.NewAddEmployeeCreated().WithPayload(params.Employee)
 }

@@ -39,16 +39,32 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 	return &client{conn: cli}, nil
 }
 
-func (c client) SaveEmployee(employee *models.Employee) (string, error) {
+func (c client) AddEmployee(employee *models.Employee) (string, error) {
 	if employee.ID == "" {
 		employee.ID = uuid.NewV4().String()
+		collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
+		if _, err := collection.InsertOne(context.TODO(), employee); err != nil {
+			return "", errors.Wrap(err, "failed to add employee")
+		}
 	}
-	opts := options.Update().SetUpsert(true)
-	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
-	if _, err := collection.UpdateOne(context.TODO(), bson.M{"id": employee.ID}, bson.M{"$set": employee}, opts); err != nil {
-		return "", errors.Wrap(err, "failed to add/update employee")
-	}
+
 	return employee.ID, nil
+}
+
+func (c client) UpdateEmployee(employee *models.Employee) error {
+	collection := c.conn.Database(viper.GetString(config.DbName)).Collection(collectionName)
+	filter := bson.M{"id": bson.M{"$eq": employee.ID}}
+	update := bson.M{"$set": employee}
+	_, err := collection.UpdateOne(
+		context.TODO(),
+		filter,
+		update,
+	)
+	if err != nil {
+		return errors.Wrap(err, "failed to update employee")
+	}
+
+	return nil
 }
 
 func (c client) GetEmployeeByID(id string) (*models.Employee, error) {

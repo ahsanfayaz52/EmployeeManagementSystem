@@ -15,12 +15,12 @@ produces:
 paths:
   /:
     post:
-      operationId: "saveEmployee"
+      operationId: "addEmployee"
       parameters:
         - in: "body"
           name: "employee"
-          description: "contains employee information"
-          required: true
+          description: "employee's details"
+          required: false
           schema:
             $ref: "#/definitions/employee"
       responses:
@@ -28,6 +28,8 @@ paths:
           description: "employee added"
           schema:
             $ref: "#/definitions/employee"
+        409:
+          description: "employee already exists"
         500:
           description: "internal server error"
     get:
@@ -59,6 +61,29 @@ paths:
             $ref: "#/definitions/employee"
         404:
           description: "employee not found"
+        500:
+          description: "internal server error"
+
+    put:
+      operationId: "updateEmployee"
+      parameters:
+        - in: "path"
+          type: "string"
+          name: "ID"
+          required: true
+          description: "UUID of the employee"
+        - in: "body"
+          name: "employee"
+          description: "employee's details"
+          required: false
+          schema:
+            $ref: "#/definitions/employee"
+
+      responses:
+        200:
+          description: "employee updated"
+          schema:
+            $ref: "#/definitions/employee"
         500:
           description: "internal server error"
 

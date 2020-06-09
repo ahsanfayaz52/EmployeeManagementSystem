@@ -11,15 +11,15 @@ import (
 	golangswaggerpaths "path"
 )
 
-// SaveEmployeeURL generates an URL for the save employee operation
-type SaveEmployeeURL struct {
+// AddEmployeeURL generates an URL for the add employee operation
+type AddEmployeeURL struct {
 	_basePath string
 }
 
 // WithBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *SaveEmployeeURL) WithBasePath(bp string) *SaveEmployeeURL {
+func (o *AddEmployeeURL) WithBasePath(bp string) *AddEmployeeURL {
 	o.SetBasePath(bp)
 	return o
 }
@@ -27,12 +27,12 @@ func (o *SaveEmployeeURL) WithBasePath(bp string) *SaveEmployeeURL {
 // SetBasePath sets the base path for this url builder, only required when it's different from the
 // base path specified in the swagger spec.
 // When the value of the base path is an empty string
-func (o *SaveEmployeeURL) SetBasePath(bp string) {
+func (o *AddEmployeeURL) SetBasePath(bp string) {
 	o._basePath = bp
 }
 
 // Build a url path and query string
-func (o *SaveEmployeeURL) Build() (*url.URL, error) {
+func (o *AddEmployeeURL) Build() (*url.URL, error) {
 	var _result url.URL
 
 	var _path = "/"
@@ -47,7 +47,7 @@ func (o *SaveEmployeeURL) Build() (*url.URL, error) {
 }
 
 // Must is a helper function to panic when the url builder returns an error
-func (o *SaveEmployeeURL) Must(u *url.URL, err error) *url.URL {
+func (o *AddEmployeeURL) Must(u *url.URL, err error) *url.URL {
 	if err != nil {
 		panic(err)
 	}
@@ -58,17 +58,17 @@ func (o *SaveEmployeeURL) Must(u *url.URL, err error) *url.URL {
 }
 
 // String returns the string representation of the path with query string
-func (o *SaveEmployeeURL) String() string {
+func (o *AddEmployeeURL) String() string {
 	return o.Must(o.Build()).String()
 }
 
 // BuildFull builds a full url with scheme, host, path and query string
-func (o *SaveEmployeeURL) BuildFull(scheme, host string) (*url.URL, error) {
+func (o *AddEmployeeURL) BuildFull(scheme, host string) (*url.URL, error) {
 	if scheme == "" {
-		return nil, errors.New("scheme is required for a full url on SaveEmployeeURL")
+		return nil, errors.New("scheme is required for a full url on AddEmployeeURL")
 	}
 	if host == "" {
-		return nil, errors.New("host is required for a full url on SaveEmployeeURL")
+		return nil, errors.New("host is required for a full url on AddEmployeeURL")
 	}
 
 	base, err := o.Build()
@@ -82,6 +82,6 @@ func (o *SaveEmployeeURL) BuildFull(scheme, host string) (*url.URL, error) {
 }
 
 // StringFull returns the string representation of a complete url
-func (o *SaveEmployeeURL) StringFull(scheme, host string) string {
+func (o *AddEmployeeURL) StringFull(scheme, host string) string {
 	return o.Must(o.BuildFull(scheme, host)).String()
 }

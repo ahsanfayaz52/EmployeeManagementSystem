@@ -52,18 +52,28 @@ func NewClient(conf db.Option) (db.DataStore, error) {
 	return &client{db: cli}, nil
 }
 
-func (c client) SaveEmployee(employee *models.Employee) (string, error) {
+func (c client) AddEmployee(employee *models.Employee) (string, error) {
 	if employee.ID == "" {
 		employee.ID = uuid.NewV4().String()
-	}
-	names := employee.Names()
-	log().Info("names = ", names)
-	if _, err := c.db.NamedExec(fmt.Sprintf(`INSERT IGNORE INTO %s (%s) VALUES(%s)`, EmployeeTableName, strings.Join(names, ","), strings.Join(mkPlaceHolder(names, ":", func(name, prefix string) string {
-		return prefix + name
-	}), ",")), employee); err != nil {
-		return "", errors.Wrap(err, "failed to add/update employee")
+		names := employee.Names()
+		if _, err := c.db.NamedExec(fmt.Sprintf(`INSERT INTO %s (%s) VALUES(%s)`, EmployeeTableName, strings.Join(names, ","), strings.Join(mkPlaceHolder(names, ":", func(name, prefix string) string {
+			return prefix + name
+		}), ",")), employee); err != nil {
+			return "", errors.Wrap(err, "failed to add employee")
+		}
 	}
 	return employee.ID, nil
+}
+
+func (c client) UpdateEmployee(employee *models.Employee) error {
+	names := employee.Names()
+	if _, err := c.db.NamedExec(fmt.Sprintf(`UPDATE %s SET %s`, EmployeeTableName, strings.Join(mkPlaceHolder(names, "=:", func(name, prefix string) string {
+		return name + prefix + name
+	}), ",")), employee); err != nil {
+		return errors.Wrap(err, "failed to update employee")
+	}
+
+	return nil
 }
 
 func (c client) GetEmployeeByID(id string) (*models.Employee, error) {
