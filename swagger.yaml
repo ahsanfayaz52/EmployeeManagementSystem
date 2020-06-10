@@ -1,0 +1,122 @@
+---
+swagger: "2.0"
+info:
+  description: "Employee Management System"
+  version: "0.0.1"
+  title: "Employee system"
+host: "localhost:8080"
+basePath: "/"
+schemes:
+  - "http"
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+paths:
+  /:
+    post:
+      operationId: "addEmployee"
+      parameters:
+        - in: "body"
+          name: "employee"
+          description: "employee's details"
+          required: false
+          schema:
+            $ref: "#/definitions/employee"
+      responses:
+        201:
+          description: "employee added"
+          schema:
+            $ref: "#/definitions/employee"
+        409:
+          description: "employee already exists"
+        500:
+          description: "internal server error"
+    get:
+      operationId: "ListEmployees"
+      description: "get all the employees"
+      responses:
+        200:
+          description: "employee response"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/employee"
+        500:
+          description: "internal server error"
+  /{ID}:
+    get:
+      operationId: "GetEmployeeByID"
+      parameters:
+        - in: "path"
+          type: "string"
+          name: "ID"
+          required: true
+          description: "UUID of the employee"
+      description: "get employee with id provided in url"
+      responses:
+        200:
+          description: "employee response"
+          schema:
+            $ref: "#/definitions/employee"
+        404:
+          description: "employee not found"
+        500:
+          description: "internal server error"
+
+    put:
+      operationId: "updateEmployee"
+      parameters:
+        - in: "path"
+          type: "string"
+          name: "ID"
+          required: true
+          description: "UUID of the employee"
+        - in: "body"
+          name: "employee"
+          description: "employee's details"
+          required: false
+          schema:
+            $ref: "#/definitions/employee"
+
+      responses:
+        200:
+          description: "employee updated"
+          schema:
+            $ref: "#/definitions/employee"
+        500:
+          description: "internal server error"
+
+    delete:
+      operationId: "DeleteEmployee"
+      parameters:
+        - in: "path"
+          name: "ID"
+          type: "string"
+          description: "UUID of the employee"
+          required: true
+      description: "delete employee with id provided in url"
+      responses:
+        204:
+          description: "employee deleted"
+        404:
+          description: "employee not found"
+        500:
+          description: "internal server error"
+
+definitions:
+  employee:
+    type: "object"
+    properties:
+      ID:
+        type: "string"
+      Name:
+        type: "string"
+      Address:
+        type: "string"
+      Age:
+        type: "integer"
+      Salary:
+        type: "integer"
+      Phone:
+        type: "integer"

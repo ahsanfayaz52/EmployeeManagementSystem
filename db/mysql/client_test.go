@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"os"
 	"reflect"
 	"testing"
 
@@ -8,13 +9,15 @@ import (
 
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/db"
 	"github.com/ahsanfayaz52/EmployeeManagementSystem/models"
-
 )
 
 func Test_client_DeleteEmployee(t *testing.T) {
+	os.Setenv("DB_PORT", "3306")
+	os.Setenv("DB_HOST", "employee-system-mysql-db")
+
 	c, _ := NewClient(db.Option{})
 	employee := &models.Employee{Name: "talha", Address: "islamabad", Age: 30, Salary: 60000, Phone: 123}
-	_, _ = c.SaveEmployee(employee)
+	_, _ = c.AddEmployee(employee)
 	type fields struct {
 		db *sqlx.DB
 	}
@@ -43,9 +46,12 @@ func Test_client_DeleteEmployee(t *testing.T) {
 }
 
 func Test_client_GetEmployeeByID(t *testing.T) {
+	os.Setenv("DB_PORT", "3306")
+	os.Setenv("DB_HOST", "employee-system-mysql-db")
+
 	c, _ := NewClient(db.Option{})
 	employee := &models.Employee{Name: "usman", Address: "attock", Age: 25, Salary: 40000, Phone: 123}
-	_, _ = c.SaveEmployee(employee)
+	_, _ = c.AddEmployee(employee)
 	type fields struct {
 		db *sqlx.DB
 	}
@@ -81,7 +87,10 @@ func Test_client_GetEmployeeByID(t *testing.T) {
 	}
 }
 
-func Test_client_ListEmployee(t *testing.T) {
+func Test_client_ListEmployees(t *testing.T) {
+	os.Setenv("DB_PORT", "3306")
+	os.Setenv("DB_HOST", "employee-system-mysql-db")
+
 	c, _ := NewClient(db.Option{})
 	type fields struct {
 		db *sqlx.DB
@@ -100,7 +109,7 @@ func Test_client_ListEmployee(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := c.ListEmployee()
+			got, err := c.ListEmployees()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ListEmployee() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -112,7 +121,10 @@ func Test_client_ListEmployee(t *testing.T) {
 	}
 }
 
-func Test_client_SaveEmployee(t *testing.T) {
+func Test_client_AddEmployee(t *testing.T) {
+	os.Setenv("DB_PORT", "3306")
+	os.Setenv("DB_HOST", "employee-system-mysql-db")
+
 	type fields struct {
 		db *sqlx.DB
 	}
@@ -127,26 +139,50 @@ func Test_client_SaveEmployee(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "success - ADD employee in db",
-			args:    args{employee: &models.Employee{Name: "beenish", Address: "lahore", Age: 23, Salary: 20000, Phone: 123}},
-			wantErr: false,
-		},
-		{
-			name:    "success - UPDATE employee in db",
-			args:    args{employee: &models.Employee{ID: "adebef41-8a90-4f73-80cc-d122a2dadb54", Name: "osama khan", Address: "sakkar", Age: 23, Salary: 20000, Phone: 123}},
+			name:    "success - add employee in db",
+			args:    args{employee: &models.Employee{Name: "beenish", Address: "lahore", Age: 35, Salary: 50000, Phone: 456}},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c, _ := NewClient(db.Option{})
-			got, err := c.SaveEmployee(tt.args.employee)
+			_, err := c.AddEmployee(tt.args.employee)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("SaveEmployee() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("AddEmployee() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
-			if got != tt.want {
-				t.Errorf("SaveEmployee() got = %v, want %v", got, tt.want)
+		})
+	}
+}
+
+func Test_client_UpdateEmployee(t *testing.T) {
+	os.Setenv("DB_PORT", "3306")
+	os.Setenv("DB_HOST", "employee-system-mysql-db")
+
+	type fields struct {
+		db *sqlx.DB
+	}
+	type args struct {
+		employee *models.Employee
+	}
+	tests := []struct {
+		name    string
+		fields  fields
+		args    args
+		wantErr bool
+	}{
+		{
+			name:    "success - update employee in db",
+			args:    args{employee: &models.Employee{Name: "shah", Address: "lahore", Age: 35, Salary: 50000, Phone: 456}},
+			wantErr: false,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			c, _ := NewClient(db.Option{})
+			if err := c.UpdateEmployee(tt.args.employee); (err != nil) != tt.wantErr {
+				t.Errorf("UpdateEmployee() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})
 	}
